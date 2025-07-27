@@ -1,0 +1,570 @@
+repeat task.wait() until game:IsLoaded()
+
+local library = {
+    currentTab = nil,
+    flags = {},
+    themes = {
+        dark = {
+            MainColor = Color3.fromRGB(25, 25, 25),
+            Background = Color3.fromRGB(25, 25, 25),
+            zyColor = Color3.fromRGB(25, 25, 25),
+            beijingColor = Color3.fromRGB(25, 25, 25)
+        },
+        light = {
+            MainColor = Color3.fromRGB(25, 25, 25),
+            Background = Color3.fromRGB(25, 25, 25),
+            zyColor = Color3.fromRGB(30, 30, 30),
+            beijingColor = Color3.fromRGB(255, 255, 255)
+        }
+    }
+}
+
+-- 服务管理器
+local services = setmetatable({}, {
+    __index = function(_, serviceName)
+        return game:GetService(serviceName)
+    end
+})
+
+local mouse = services.Players.LocalPlayer:GetMouse()
+
+-- 动画工具
+function library.Tween(obj, t, data)
+    services.TweenService:Create(obj, TweenInfo.new(t[1], Enum.EasingStyle[t[2]], Enum.EasingDirection[t[3]]), data):Play()
+    return true
+end
+
+-- 涟漪效果
+function library.Ripple(obj)
+    task.spawn(function()
+        obj.ClipsDescendants = true
+        
+        local ripple = Instance.new("ImageLabel")
+        ripple.Name = "Ripple"
+        ripple.Parent = obj
+        ripple.BackgroundTransparency = 1
+        ripple.ZIndex = 8
+        ripple.Image = "rbxassetid://112563798072892"
+        ripple.ImageTransparency = 0.8
+        ripple.ScaleType = Enum.ScaleType.Fit
+        ripple.ImageColor3 = Color3.fromRGB(255, 255, 255)
+        
+        local mousePos = services.UserInputService:GetMouseLocation()
+        ripple.Position = UDim2.new(
+            (mousePos.X - ripple.AbsolutePosition.X) / obj.AbsoluteSize.X,
+            0,
+            (mousePos.Y - ripple.AbsolutePosition.Y) / obj.AbsoluteSize.Y,
+            0
+        )
+        
+        library.Tween(ripple, {0.3, "Linear", "InOut"}, {
+            Position = UDim2.new(-5.5, 0, -5.5, 0),
+            Size = UDim2.new(12, 0, 12, 0)
+        })
+        
+        task.wait(0.15)
+        library.Tween(ripple, {0.3, "Linear", "InOut"}, {ImageTransparency = 1})
+        task.wait(0.3)
+        ripple:Destroy()
+    end)
+end
+
+-- 标签切换系统
+local switchingTabs = false
+function library.SwitchTab(newTab)
+    if switchingTabs then return end
+    
+    local oldTab = library.currentTab
+    library.currentTab = newTab
+    
+    if oldTab then
+        switchingTabs = true
+        
+        -- 淡出旧标签
+        services.TweenService:Create(oldTab[1], TweenInfo.new(0.1), {ImageTransparency = 0.2}):Play()
+        services.TweenService:Create(oldTab[1].TabText, TweenInfo.new(0.1), {TextTransparency = 0.2}):Play()
+        oldTab[2].Visible = false
+        
+        -- 淡入新标签
+        services.TweenService:Create(newTab[1], TweenInfo.new(0.1), {ImageTransparency = 0}):Play()
+        services.TweenService:Create(newTab[1].TabText, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
+        newTab[2].Visible = true
+        
+        task.wait(0.1)
+        switchingTabs = false
+    else
+        -- 首次激活
+        services.TweenService:Create(newTab[1], TweenInfo.new(0.1), {ImageTransparency = 0}):Play()
+        services.TweenService:Create(newTab[1].TabText, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
+        newTab[2].Visible = true
+    end
+end
+
+-- 窗口拖动系统
+function library.Drag(frame, handle)
+    handle = handle or frame
+    local dragging, dragInput, dragStart, startPos
+    
+    handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    
+    services.UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(
+                startPos.X.Scale, 
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale, 
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
+
+-- 主窗口创建函数
+function library.new(name, themeName)
+    themeName = themeName or "dark"
+    local theme = library.themes[themeName] or library.themes.dark
+    
+    -- 清理旧UI
+    for _, v in ipairs(services.CoreGui:GetChildren()) do
+        if v.Name == "FrostyUI" then
+            v:Destroy()
+        end
+    end
+    
+    -- 创建主容器
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "FrostyUI"
+    gui.ResetOnSpawn = false
+    
+    -- 安全保护
+    if syn and syn.protect_gui then
+        syn.protect_gui(gui)
+    end
+    
+    gui.Parent = services.CoreGui
+    
+    local main = Instance.new("Frame")
+    main.Name = "Main"
+    main.Parent = gui
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
+    main.BackgroundColor3 = theme.Background
+    main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    main.Size = UDim2.new(0, 572, 0, 353)
+    main.Active = true
+    
+    -- 圆角
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 5)
+    corner.Parent = main
+    
+    -- 阴影
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "Shadow"
+    shadow.Parent = main
+    shadow.BackgroundTransparency = 1
+    shadow.Size = UDim2.new(1, 43, 1, 43)
+    shadow.Position = UDim2.new(0, -21.5, 0, -21.5)
+    shadow.Image = "rbxassetid://6015897843"
+    shadow.ImageColor3 = Color3.new(0, 0, 0)
+    shadow.ImageTransparency = 0.5
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(49, 49, 450, 450)
+    shadow.ZIndex = -1
+    
+    -- 拖动功能
+    library.Drag(main)
+    
+    -- 标签系统
+    local tabContainer = Instance.new("Frame")
+    tabContainer.Name = "TabContainer"
+    tabContainer.Parent = main
+    tabContainer.BackgroundTransparency = 1
+    tabContainer.Size = UDim2.new(1, 0, 1, 0)
+    
+    local tabButtons = Instance.new("ScrollingFrame")
+    tabButtons.Name = "TabButtons"
+    tabButtons.Parent = main
+    tabButtons.BackgroundTransparency = 1
+    tabButtons.Size = UDim2.new(0.2, 0, 1, -40)
+    tabButtons.Position = UDim2.new(0, 5, 0, 35)
+    tabButtons.ScrollBarThickness = 2
+    
+    local tabListLayout = Instance.new("UIListLayout")
+    tabListLayout.Parent = tabButtons
+    tabListLayout.Padding = UDim.new(0, 5)
+    
+    -- 标题
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.Parent = main
+    title.BackgroundTransparency = 1
+    title.Position = UDim2.new(0, 10, 0, 5)
+    title.Size = UDim2.new(0.9, 0, 0, 25)
+    title.Font = Enum.Font.GothamBold
+    title.Text = name
+    title.TextColor3 = Color3.new(1, 1, 1)
+    title.TextSize = 18
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    
+    -- 控制按钮
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Name = "ToggleButton"
+    toggleButton.Parent = gui
+    toggleButton.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    toggleButton.Position = UDim2.new(0, 10, 0, 10)
+    toggleButton.Size = UDim2.new(0, 80, 0, 30)
+    toggleButton.Font = Enum.Font.SourceSans
+    toggleButton.Text = "显示/隐藏"
+    toggleButton.TextColor3 = Color3.new(1, 1, 1)
+    toggleButton.TextSize = 14
+    
+    toggleButton.MouseButton1Click:Connect(function()
+        main.Visible = not main.Visible
+    end)
+    
+    -- 窗口API
+    local window = {}
+    
+    function window:Tab(name, iconId)
+        local tabId = #tabContainer:GetChildren() + 1
+        
+        -- 标签内容
+        local tabFrame = Instance.new("ScrollingFrame")
+        tabFrame.Name = "Tab_"..name
+        tabFrame.Parent = tabContainer
+        tabFrame.BackgroundTransparency = 1
+        tabFrame.Size = UDim2.new(1, 0, 1, 0)
+        tabFrame.Visible = tabId == 1
+        tabFrame.ScrollBarThickness = 5
+        
+        local tabLayout = Instance.new("UIListLayout")
+        tabLayout.Parent = tabFrame
+        tabLayout.Padding = UDim.new(0, 10)
+        
+        -- 标签按钮
+        local tabButton = Instance.new("ImageButton")
+        tabButton.Name = "TabButton_"..name
+        tabButton.Parent = tabButtons
+        tabButton.BackgroundTransparency = 1
+        tabButton.Size = UDim2.new(0.9, 0, 0, 40)
+        
+        local icon = Instance.new("ImageLabel")
+        icon.Name = "Icon"
+        icon.Parent = tabButton
+        icon.BackgroundTransparency = 1
+        icon.Size = UDim2.new(0.3, 0, 0.7, 0)
+        icon.Position = UDim2.new(0.05, 0, 0.15, 0)
+        icon.Image = "rbxassetid://"..(iconId or "4370341699")
+        icon.ImageTransparency = tabId == 1 and 0 or 0.3
+        
+        local label = Instance.new("TextLabel")
+        label.Name = "Label"
+        label.Parent = tabButton
+        label.BackgroundTransparency = 1
+        label.Position = UDim2.new(0.4, 0, 0, 0)
+        label.Size = UDim2.new(0.5, 0, 1, 0)
+        label.Font = Enum.Font.Gotham
+        label.Text = name
+        label.TextColor3 = Color3.new(1, 1, 1)
+        label.TextSize = 14
+        label.TextTransparency = tabId == 1 and 0 or 0.3
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        
+        -- 标签点击事件
+        tabButton.MouseButton1Click:Connect(function()
+            library.SwitchTab({tabButton, tabFrame})
+        end)
+        
+        -- 首次激活
+        if tabId == 1 then
+            library.currentTab = {tabButton, tabFrame}
+        end
+        
+        -- 标签内容API
+        local tabAPI = {}
+        
+        function tabAPI:Section(title, defaultOpen)
+            local section = Instance.new("Frame")
+            section.Name = "Section_"..title
+            section.Parent = tabFrame
+            section.BackgroundColor3 = theme.zyColor
+            section.Size = UDim2.new(0.95, 0, 0, 45)
+            
+            local sectionCorner = Instance.new("UICorner")
+            sectionCorner.CornerRadius = UDim.new(0, 8)
+            sectionCorner.Parent = section
+            
+            -- 标题
+            local header = Instance.new("TextLabel")
+            header.Name = "Header"
+            header.Parent = section
+            header.BackgroundTransparency = 1
+            header.Size = UDim2.new(0.8, 0, 0.7, 0)
+            header.Position = UDim2.new(0.1, 0, 0.15, 0)
+            header.Font = Enum.Font.GothamMedium
+            header.Text = title
+            header.TextColor3 = Color3.new(1, 1, 1)
+            header.TextSize = 16
+            header.TextXAlignment = Enum.TextXAlignment.Left
+            
+            -- 折叠按钮
+            local toggleIcon = Instance.new("ImageButton")
+            toggleIcon.Name = "Toggle"
+            toggleIcon.Parent = section
+            toggleIcon.BackgroundTransparency = 1
+            toggleIcon.Size = UDim2.new(0.1, 0, 0.6, 0)
+            toggleIcon.Position = UDim2.new(0.85, 0, 0.2, 0)
+            toggleIcon.Image = "rbxassetid://6031302934" -- 关闭图标
+            
+            -- 内容容器
+            local content = Instance.new("Frame")
+            content.Name = "Content"
+            content.Parent = section
+            content.BackgroundTransparency = 1
+            content.Position = UDim2.new(0, 10, 1, 5)
+            content.Size = UDim2.new(0.95, 0, 0, 0)
+            content.ClipsDescendants = true
+            
+            local contentLayout = Instance.new("UIListLayout")
+            contentLayout.Parent = content
+            contentLayout.Padding = UDim.new(0, 5)
+            
+            -- 折叠状态
+            local isOpen = defaultOpen == nil and true or defaultOpen
+            
+            -- 更新显示状态
+            local function updateState()
+                if isOpen then
+                    content.Size = UDim2.new(0.95, 0, 0, contentLayout.AbsoluteContentSize.Y)
+                    section.Size = UDim2.new(0.95, 0, 0, 45 + contentLayout.AbsoluteContentSize.Y + 10)
+                    toggleIcon.Image = "rbxassetid://6031302932" -- 打开图标
+                else
+                    content.Size = UDim2.new(0.95, 0, 0, 0)
+                    section.Size = UDim2.new(0.95, 0, 0, 45)
+                    toggleIcon.Image = "rbxassetid://6031302934" -- 关闭图标
+                end
+            end
+            
+            -- 点击事件
+            toggleIcon.MouseButton1Click:Connect(function()
+                isOpen = not isOpen
+                updateState()
+            end)
+            
+            -- 初始状态
+            updateState()
+            
+            -- 内容变化监听
+            contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateState)
+            
+            -- 区域API
+            local sectionAPI = {}
+            
+            function sectionAPI:Button(text, callback)
+                local button = Instance.new("TextButton")
+                button.Name = "Button_"..text
+                button.Parent = content
+                button.BackgroundColor3 = theme.zyColor
+                button.Size = UDim2.new(1, 0, 0, 35)
+                button.Font = Enum.Font.Gotham
+                button.Text = "    "..text
+                button.TextColor3 = Color3.new(1, 1, 1)
+                button.TextSize = 14
+                button.TextXAlignment = Enum.TextXAlignment.Left
+                
+                local corner = Instance.new("UICorner")
+                corner.CornerRadius = UDim.new(0, 6)
+                corner.Parent = button
+                
+                button.MouseButton1Click:Connect(function()
+                    library.Ripple(button)
+                    if callback then callback() end
+                end)
+                
+                return button
+            end
+            
+            function sectionAPI:Toggle(text, flag, default, callback)
+                local toggle = Instance.new("TextButton")
+                toggle.Name = "Toggle_"..text
+                toggle.Parent = content
+                toggle.BackgroundColor3 = theme.zyColor
+                toggle.Size = UDim2.new(1, 0, 0, 35)
+                toggle.Text = ""
+                toggle.AutoButtonColor = false
+                
+                local corner = Instance.new("UICorner")
+                corner.CornerRadius = UDim.new(0, 6)
+                corner.Parent = toggle
+                
+                local label = Instance.new("TextLabel")
+                label.Parent = toggle
+                label.BackgroundTransparency = 1
+                label.Size = UDim2.new(0.7, 0, 1, 0)
+                label.Font = Enum.Font.Gotham
+                label.Text = "    "..text
+                label.TextColor3 = Color3.new(1, 1, 1)
+                label.TextSize = 14
+                label.TextXAlignment = Enum.TextXAlignment.Left
+                
+                local stateBox = Instance.new("Frame")
+                stateBox.Parent = toggle
+                stateBox.BackgroundColor3 = theme.Background
+                stateBox.Size = UDim2.new(0.2, 0, 0.7, 0)
+                stateBox.Position = UDim2.new(0.75, 0, 0.15, 0)
+                
+                local stateCorner = Instance.new("UICorner")
+                stateCorner.CornerRadius = UDim.new(0, 12)
+                stateCorner.Parent = stateBox
+                
+                local indicator = Instance.new("Frame")
+                indicator.Parent = stateBox
+                indicator.BackgroundColor3 = Color3.new(1, 1, 1)
+                indicator.Size = UDim2.new(0.5, 0, 1, 0)
+                indicator.Position = UDim2.new(0, 0, 0, 0)
+                
+                local indCorner = Instance.new("UICorner")
+                indCorner.CornerRadius = UDim.new(0, 12)
+                indCorner.Parent = indicator
+                
+                -- 状态管理
+                local isEnabled = default or false
+                library.flags[flag] = isEnabled
+                
+                local function updateState()
+                    if isEnabled then
+                        indicator.Position = UDim2.new(0.5, 0, 0, 0)
+                        indicator.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+                    else
+                        indicator.Position = UDim2.new(0, 0, 0, 0)
+                        indicator.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+                    end
+                end
+                
+                updateState()
+                
+                toggle.MouseButton1Click:Connect(function()
+                    isEnabled = not isEnabled
+                    library.flags[flag] = isEnabled
+                    updateState()
+                    if callback then callback(isEnabled) end
+                end)
+                
+                return toggle
+            end
+            
+            function sectionAPI:Slider(text, flag, min, max, default, callback)
+                local slider = Instance.new("Frame")
+                slider.Name = "Slider_"..text
+                slider.Parent = content
+                slider.BackgroundColor3 = theme.zyColor
+                slider.Size = UDim2.new(1, 0, 0, 50)
+                
+                local corner = Instance.new("UICorner")
+                corner.CornerRadius = UDim.new(0, 6)
+                corner.Parent = slider
+                
+                local label = Instance.new("TextLabel")
+                label.Parent = slider
+                label.BackgroundTransparency = 1
+                label.Size = UDim2.new(0.8, 0, 0.4, 0)
+                label.Position = UDim2.new(0.05, 0, 0, 0)
+                label.Font = Enum.Font.Gotham
+                label.Text = "    "..text
+                label.TextColor3 = Color3.new(1, 1, 1)
+                label.TextSize = 14
+                label.TextXAlignment = Enum.TextXAlignment.Left
+                
+                local valueLabel = Instance.new("TextLabel")
+                valueLabel.Parent = slider
+                valueLabel.BackgroundTransparency = 1
+                valueLabel.Size = UDim2.new(0.2, 0, 0.4, 0)
+                valueLabel.Position = UDim2.new(0.75, 0, 0, 0)
+                valueLabel.Font = Enum.Font.Gotham
+                valueLabel.Text = tostring(default or min)
+                valueLabel.TextColor3 = Color3.new(1, 1, 1)
+                valueLabel.TextSize = 14
+                valueLabel.TextXAlignment = Enum.TextXAlignment.Right
+                
+                local track = Instance.new("Frame")
+                track.Parent = slider
+                track.BackgroundColor3 = theme.Background
+                track.Size = UDim2.new(0.9, 0, 0.2, 0)
+                track.Position = UDim2.new(0.05, 0, 0.6, 0)
+                
+                local trackCorner = Instance.new("UICorner")
+                trackCorner.CornerRadius = UDim.new(0, 4)
+                trackCorner.Parent = track
+                
+                local fill = Instance.new("Frame")
+                fill.Parent = track
+                fill.BackgroundColor3 = Color3.new(0, 0.5, 1)
+                fill.Size = UDim2.new(0.5, 0, 1, 0)
+                
+                local fillCorner = Instance.new("UICorner")
+                fillCorner.CornerRadius = UDim.new(0, 4)
+                fillCorner.Parent = fill
+                
+                -- 状态管理
+                local currentValue = default or min
+                library.flags[flag] = currentValue
+                
+                local function updateState()
+                    local percent = (currentValue - min) / (max - min)
+                    fill.Size = UDim2.new(percent, 0, 1, 0)
+                    valueLabel.Text = tostring(math.floor(currentValue))
+                end
+                
+                updateState()
+                
+                local function setValue(value)
+                    currentValue = math.clamp(value, min, max)
+                    library.flags[flag] = currentValue
+                    updateState()
+                    if callback then callback(currentValue) end
+                end
+                
+                track.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        local mousePos = services.UserInputService:GetMouseLocation()
+                        local relativeX = (mousePos.X - track.AbsolutePosition.X)
+                        local percent = math.clamp(relativeX / track.AbsoluteSize.X, 0, 1)
+                        setValue(min + (max - min) * percent)
+                    end
+                end)
+                
+                return {
+                    SetValue = setValue,
+                    GetValue = function() return currentValue end
+                }
+            end
+            
+            return sectionAPI
+        end
+        
+        return tabAPI
+    end
+    
+    return window
+end
+
+return library
