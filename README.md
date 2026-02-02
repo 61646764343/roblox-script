@@ -1,48 +1,89 @@
 # 🐲 江脚本 · Jiang Script
 
-> 稳定 · 高效 · 持续更新 | 由小江与夜晚匠心呈现
+> 稳定 · 高效 · 持续维护 | 由小江 & 夜晚 联合维护
 
 ![版本](https://img.shields.io/badge/版本-3.5.2-FF6B8B)
 ![状态](https://img.shields.io/badge/状态-在线-37ECBA)
 ![更新](https://img.shields.io/badge/更新-2026.02-2D9EE0)
 ![许可](https://img.shields.io/badge/许可-仅供学习-FFD166)
 
+---
+
 ## ✨ 项目简介
-**江脚本**是一个功能强大的Roblox脚本集合，旨在提供丰富的自动化体验与游戏功能增强。我们致力于持续更新，确保最佳的兼容性与性能。
 
-## 🚀 一键加载
-使用你信赖的**最新版执行器**，复制并执行以下代码：
-
-```lua
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/61646764343/roblox-script/refs/heads/main/jiang-script.lua'),true))()
-```
-
-⚡ 核心特性
-
-特性 描述
-🎮 多游戏适配 广泛支持主流Roblox游戏，智能识别环境。
-🔧 功能集成 汇集多种实用工具，提供便捷的一体化操作界面。
-📈 性能优化 注重执行效率与稳定性，减少资源占用。
-🔄 持续维护 针对游戏更新快速响应，定期发布新功能与优化。
-
-🛠️ 使用指南
-
-1. 准备工作：确保拥有可用的Roblox账号与最新的脚本执行器。
-2. 注入执行：在游戏内打开执行器，粘贴上方加载代码并运行。
-3. 开始使用：等待脚本界面加载完毕，即可畅享所有功能。
-
-📢 社区与支持
-
-· 👥 QQ交流群：点击加入 (群号: 538697509)
-· 💎 作者QQ：小江 (请于QQ群内询问)、夜晚 (请于QQ群内询问)
-· ⚠️ 重要提示：请加群以获取最新的使用指南、更新公告和专属技术支持。
-
-📌 免责声明
-
-· 本项目所有资源仅供个人学习与交流技术之用。
-· 严禁用于任何商业用途或违反游戏规则的场景。
-· 使用者应对其行为自行承担全部风险与责任。
+**江脚本（Jiang Script）** 是一套用于 Roblox 的脚本集合，目标是为玩家与研究者提供稳定、兼容且持续维护的脚本工具集。  
+仅用于学习与技术交流场景，不作为商业用途或规避游戏规则之用。
 
 ---
 
-感谢使用！期待在社区与你相遇。 🚀
+## 🚀 一键加载
+
+使用你信赖的 **最新版执行器**，在游戏内执行以下代码：
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/61646764343/roblox-script/refs/heads/main/jiang-script.lua", true))()
+
+
+---
+
+⚡ 核心特性
+
+特性	描述
+
+🎮 多游戏适配	广泛支持主流 Roblox 游戏，自动识别运行环境
+🔧 功能集成	汇集常用工具与增强功能，提供统一操作界面
+📈 性能优化	注重执行效率与稳定性，降低资源占用
+🔄 持续维护	针对游戏更新快速响应并发布适配修复
+
+
+
+---
+
+🛠️ 使用指南
+
+1. 准备：确保拥有有效的 Roblox 账号与可用的脚本执行器（请使用信誉良好的执行器）。
+
+
+2. 注入：进入目标游戏，打开执行器，粘贴并运行上方加载代码。
+
+
+3. 启动：等待脚本加载完成，按照界面提示使用功能。
+
+
+4. 卸载/停用：如需停止使用，请按执行器或脚本内的退出/卸载选项（若无，请重新进入游戏或重启客户端）。
+
+
+
+
+---
+
+📢 社区与支持
+
+QQ群号：538697509
+
+点击链接加入群聊（江脚本大群）：
+https://qun.qq.com/universal-share/share?ac=1&authKey=yov8rfrIWwVfYU1HN1viTYZWyhEbLIbxvIvUZuXu%2FCYuwZF55PGvGS0w2jYqUZxT&busi_data=eyJncm91cENvZGUiOiI1Mzg2OTc1MDkiLCJ0b2tlbiI6ImZoRXcvcUphK3FRaFBNU3E2N1AxOFNsL3lNcGRsSGs5QW93eUJScEZ3Tms5aWZMZ0JhR0JWdjF2cWdMSnV4OEsiLCJ1aW4iOiI5MDQxODU1MjgifQ%3D%3D&data=mvzYGFdCRKsETE-Hg7XX3DM_RD8rLw_6V50Zh_L1aLkKVM5LaEDU0YTGMxOLpdHAte-0Z6I-d2R5O4tuDd9mag&svctype=4&tempid=h5_group_info
+
+
+> 注：群内发布项目更新、使用说明与问题反馈。作者联系方式以群内公告为准。
+
+
+
+
+---
+
+⚠️ 免责声明
+
+本项目仅供 个人学习与技术交流；禁止用于任何商业或违反平台/游戏规则的用途。
+
+使用脚本可能导致账号风险，使用者需自行承担所有后果与法律责任。
+
+项目不提供任何保证或赔偿。
+
+
+
+---
+
+📄 许可证
+
+本仓库资源仅限学习用途（Educational Use Only），如需转载或商业使用请联系作者取得书面授权。
