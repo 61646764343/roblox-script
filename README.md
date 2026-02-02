@@ -1,4 +1,3 @@
-```markdown
 # 🐲 江脚本 · Jiang Script
 
 > 稳定 · 高效 · 持续更新 | 由小江与夜晚匠心呈现
@@ -46,6 +45,4 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/61646764343/roblox-s
 
 ---
 
-感谢使用！期待在社区与你相遇。 🚀
-
-```
+感谢使用！期待在社区与你相遇。
