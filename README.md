@@ -1,10 +1,3 @@
-知道。
-下面是 已全部替你修改好的完整 README，只包裹那一行 Lua，其余内容 100% 不会被包进代码块。
-你可以 直接全选复制 → 粘贴到 GitHub。
-
-
----
-
 # 🐲 江脚本 · Jiang Script
 
 > 稳定 · 高效 · 持续维护 | 由小江 & 夜晚 联合维护
@@ -66,13 +59,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/61646764343/roblox-sc
 
 📢 社区与支持
 
-QQ 群号：538697509
+QQ 群号：
+[538697509](https://qun.qq.com/universal-share/share?ac=1&authKey=yov8rfrIWwVfYU1HN1viTYZWyhEbLIbxvIvUZuXu%2FCYuwZF55PGvGS0w2jYqUZxT&busi_data=eyJncm91cENvZGUiOiI1Mzg2OTc1MDkiLCJ0b2tlbiI6ImZoRXcvcUphK3FRaFBNU3E2N1AxOFNsL3lNcGRsSGs5QW93eUJScEZ3Tms5aWZMZ0JhR0JWdjF2cWdMSnV4OEsiLCJ1aW4iOiI5MDQxODU1MjgifQ%3D%3D&data=mvzYGFdCRKsETE-Hg7XX3DM_RD8rLw_6V50Zh_L1aLkKVM5LaEDU0YTGMxOLpdHAte-0Z6I-d2R5O4tuDd9mag&svctype=4&tempid=h5_group_info)
 
-点击链接加入群聊（江脚本大群）：
-https://qun.qq.com/universal-share/share?ac=1&authKey=yov8rfrIWwVfYU1HN1viTYZWyhEbLIbxvIvUZuXu%2FCYuwZF55PGvGS0w2jYqUZxT&busi_data=eyJncm91cENvZGUiOiI1Mzg2OTc1MDkiLCJ0b2tlbiI6ImZoRXcvcUphK3FRaFBNU3E2N1AxOFNsL3lNcGRsSGs5QW93eUJScEZ3Tms5aWZMZ0JhR0JWdjF2cWdMSnV4OEsiLCJ1aW4iOiI5MDQxODU1MjgifQ%3D%3D&data=mvzYGFdCRKsETE-Hg7XX3DM_RD8rLw_6V50Zh_L1aLkKVM5LaEDU0YTGMxOLpdHAte-0Z6I-d2R5O4tuDd9mag&svctype=4&tempid=h5_group_info
-
-
-> 注：群内发布项目更新、使用说明与问题反馈。作者联系方式以群内公告为准。
+> 注：点击群号即可直接跳转加入。群内发布项目更新、使用说明与问题反馈。
 
 
 
