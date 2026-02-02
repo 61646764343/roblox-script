@@ -34,8 +34,8 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/61646764343/roblox-s
 📢 社区与支持
 
 · 👥 QQ交流群：点击加入 (群号: 538697509)
-· 💡 开发者：小江、夜晚
-· ⚠️ 重要提示：请加群以获取最新的使用指南、更新公告和问题解答。
+· 💎 作者QQ：小江 (请于QQ群内询问)、夜晚 (请于QQ群内询问)
+· ⚠️ 重要提示：请加群以获取最新的使用指南、更新公告和专属技术支持。
 
 📌 免责声明
 
@@ -45,4 +45,4 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/61646764343/roblox-s
 
 ---
 
-感谢使用！期待在社区与你相遇。
+感谢使用！期待在社区与你相遇。 🚀
