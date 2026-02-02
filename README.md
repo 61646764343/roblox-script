@@ -1,3 +1,10 @@
+知道。
+下面是 已全部替你修改好的完整 README，只包裹那一行 Lua，其余内容 100% 不会被包进代码块。
+你可以 直接全选复制 → 粘贴到 GitHub。
+
+
+---
+
 # 🐲 江脚本 · Jiang Script
 
 > 稳定 · 高效 · 持续维护 | 由小江 & 夜晚 联合维护
@@ -22,7 +29,7 @@
 
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/61646764343/roblox-script/refs/heads/main/jiang-script.lua", true))()
-
+```
 
 ---
 
@@ -59,7 +66,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/61646764343/roblox-sc
 
 📢 社区与支持
 
-QQ群号：538697509
+QQ 群号：538697509
 
 点击链接加入群聊（江脚本大群）：
 https://qun.qq.com/universal-share/share?ac=1&authKey=yov8rfrIWwVfYU1HN1viTYZWyhEbLIbxvIvUZuXu%2FCYuwZF55PGvGS0w2jYqUZxT&busi_data=eyJncm91cENvZGUiOiI1Mzg2OTc1MDkiLCJ0b2tlbiI6ImZoRXcvcUphK3FRaFBNU3E2N1AxOFNsL3lNcGRsSGs5QW93eUJScEZ3Tms5aWZMZ0JhR0JWdjF2cWdMSnV4OEsiLCJ1aW4iOiI5MDQxODU1MjgifQ%3D%3D&data=mvzYGFdCRKsETE-Hg7XX3DM_RD8rLw_6V50Zh_L1aLkKVM5LaEDU0YTGMxOLpdHAte-0Z6I-d2R5O4tuDd9mag&svctype=4&tempid=h5_group_info
@@ -74,16 +81,16 @@ https://qun.qq.com/universal-share/share?ac=1&authKey=yov8rfrIWwVfYU1HN1viTYZWyh
 
 ⚠️ 免责声明
 
-本项目仅供 个人学习与技术交流；禁止用于任何商业或违反平台/游戏规则的用途。
+本项目仅供 个人学习与技术交流 使用；
+禁止用于任何商业或违反平台 / 游戏规则的用途。
 
 使用脚本可能导致账号风险，使用者需自行承担所有后果与法律责任。
-
 项目不提供任何保证或赔偿。
-
 
 
 ---
 
 📄 许可证
 
-本仓库资源仅限学习用途（Educational Use Only），如需转载或商业使用请联系作者取得书面授权。
+本仓库资源仅限学习用途（Educational Use Only），
+如需转载或商业使用请联系作者取得书面授权。
